@@ -1,5 +1,5 @@
-import express from 'express';
 import { IServerConfiguration } from './IServerConfiguration';
+const express = require('express');
 
 /*
 * Extremely basic default configuration. Should generally only be used for testing.

@@ -4,7 +4,8 @@
   "description": "Exposes a REST service which gets information about an item, including name and pricing information, based on an item ID. Also allows pricing updates.",
   "main": "dist/index.js",
   "scripts": {
-    "test": "test:all"
+    "test": "test:all",
+    "build": "./node_modules/.bin/tsc"
   },
   "repository": {
     "type": "git",
@@ -25,9 +26,12 @@
   "homepage": "https://github.com/invictus125/item-info-service#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "typescript": "^3.9.7"
+    "nosql": "^6.1.0"
   },
   "devDependencies": {
-    "jest": "^26.1.0"
+    "@babel/types": "^7.10.5",
+    "jest": "^26.1.0",
+    "typescript": "^3.9.7",
+    "@types/node": "^14.0.25"
   }
 }

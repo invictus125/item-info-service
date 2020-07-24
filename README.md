@@ -10,5 +10,6 @@ Gets an item name and price based on an ID, and allows price updates.
 - Integrate response cache
 - Test pre-release comprised of the completed pieces
 - Build and commit executables for Windows and MacOS
+- Change Artifactory paths in package-lock to global NPM registry
 - Update docs
 - Release
