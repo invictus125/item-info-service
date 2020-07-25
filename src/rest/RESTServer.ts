@@ -16,6 +16,10 @@ const defaultConfig: IServerConfiguration = {
   ]
 };
 
+/**
+ * A simple web server designed to respond to HTTP requests.
+ * Can be configured to run on any port, and paths/callbacks can be set up using the IPathConfiguration interface in the server configuration.
+ */
 export default class RESTServer {
   private server: any;
 
