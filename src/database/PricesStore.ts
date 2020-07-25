@@ -7,7 +7,7 @@ export default class PricesStore {
 
     constructor(filePath: string) {
         if (fs.existsSync(filePath)) {
-            nosql.load(filePath);
+            this.db = nosql.load(filePath);
         } else {
             throw new Error('PricesStore: Invalid data file! ' + filePath);
         }
@@ -29,7 +29,7 @@ export default class PricesStore {
         });
     }
 
-    public read(id: number): Promise<IPriceRecord> {
+    public read(id: number): Promise<Array<IPriceRecord>> {
         return new Promise((resolve, reject): void => {
             this.db.find().where('id', id).callback((err: Error, record: any): void => {
                 if (err) {
@@ -39,5 +39,21 @@ export default class PricesStore {
                 }
             });
         });
+    }
+
+    public update(record: IPriceRecord): Promise<number> {
+      return new Promise((resolve, reject): void => {
+        this.db.update(record, true).make((builder: any) => {
+          // builder.first(); --> updates only the one document
+          builder.where('id', record.id);
+          builder.callback((err: Error, count: number): void => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(count);
+            }
+          });
+      });
+      });
     }
 };
