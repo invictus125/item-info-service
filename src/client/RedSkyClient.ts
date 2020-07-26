@@ -6,10 +6,11 @@ export default class RedSkyClient {
   private apiVersion: string;
 
   constructor(apiVersion: string = 'v2') {
+    this.apiVersion = apiVersion;
     this.client = new SecureWebRequestClient('https://redsky.target.com');
   }
 
-  public async getItemNameAndPrice(id: number): Promise<IRedSkyData> {
+  public async getItemData(id: number): Promise<IRedSkyData> {
     const resp: any = await this.client.getJsonResponse([ `${this.apiVersion}/pdp/tcin/${id}` ]);
     return this.rsResponseToRsData(id, resp);
   }
