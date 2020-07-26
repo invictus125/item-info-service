@@ -1,10 +1,10 @@
-import { IServerConfiguration } from './IServerConfiguration';
+import { IServerConfig, IPathConfig } from './IServerConfig';
 const express = require('express');
 
 /*
 * Extremely basic default configuration. Should generally only be used for testing.
 */
-const defaultConfig: IServerConfiguration = {
+const defaultConfig: IServerConfig = {
   port: 80,
   paths: [
     {
@@ -27,19 +27,23 @@ export default class RESTServer {
     this.server = express();
   }
 
-  public start(config: IServerConfiguration = defaultConfig): void {
+  public start(config: IServerConfig = defaultConfig): void {
     // Set up paths and callbacks per the configuration.
     for (const request of config.paths) {
-      // Every path will have a get callback at a minimum in our service.
-      this.server.get(request.path, request.getCallback);
-      
-      // Handle the optional action.
-      if (request.putCallback) {
-        this.server.put(request.path, request.putCallback);
-      }
+      this.addPath(request);
     }
 
     // Start listening for requests.
     this.server.listen(config.port);
+  }
+
+  public addPath(config: IPathConfig): void {
+    // Every path will have a get callback at a minimum in our service.
+    this.server.get(config.path, config.getCallback);
+          
+    // Handle the optional action.
+    if (config.putCallback) {
+      this.server.put(config.path, config.putCallback);
+    }
   }
 };

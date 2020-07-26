@@ -1,12 +1,13 @@
 import SecureWebRequestClient from './SecureWebRequestClient';
 import { IRedSkyResponse, IRedSkyData } from './IRedSkyData';
+import { IRedSkyConfig } from './IRedSkyConfig';
 
 export default class RedSkyClient {
   private client: SecureWebRequestClient;
   private apiVersion: string;
 
-  constructor(apiVersion: string = 'v2') {
-    this.apiVersion = apiVersion;
+  constructor(config: IRedSkyConfig) {
+    this.apiVersion = config.apiVersion;
     this.client = new SecureWebRequestClient('https://redsky.target.com');
   }
 

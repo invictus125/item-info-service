@@ -2,7 +2,7 @@ import path from 'path';
 import PricesStore from '../../src/database/LocalPricesStore';
 import { IPriceRecord } from '../../src/database/IPriceRecord';
 import fs from 'fs';
-const _ = require('lodash');
+import _ from 'lodash';
 
 describe('PricesStore', (): void => {
   const dbFile = path.resolve(process.cwd(), 'tests','database','testDB.nosql');

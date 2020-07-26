@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-      "module": "system",
+      "module": "commonjs",
       "noImplicitAny": true,
       "removeComments": true,
       "preserveConstEnums": true,
       "outDir": "build",
-      "sourceMap": true
+      "sourceMap": true,
+      "target": "ES6",
+      "esModuleInterop": true
   },
   "include": [
       "src/**/*"
