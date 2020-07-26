@@ -1,5 +1,5 @@
 export interface IPrice {
-    value: string;
+    value: number;
     currency: string;
 };
 
