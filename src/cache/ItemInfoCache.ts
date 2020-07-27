@@ -201,11 +201,12 @@ export default class ItemInfoCache {
     this.purgeScheduled = true;
     await waitMs(FIVE_SECONDS_MS);
     return new Promise((resolve): void => {
-      const timeArrayCopy = [...this.timeArray];
-      for (const timeRec of timeArrayCopy) {
+      // eslint-disable-next-line
+      for (let i = this.timeArray.length; i >= 0; i--) {
+        const timeRec = this.timeArray[i];
         const record = this.records.get(timeRec.id);
         if (record.time !== timeRec.time) {
-          this.removeFromTimeArray(record);
+          this.timeArray.splice(i, 1);
         }
       }
       this.purgeScheduled = false;
