@@ -18,9 +18,13 @@ export interface IServiceConfig {
   restServer: IServerConfig;
 }
 
+/**
+ * Generates a default configuration to be used if no user configuration is provided.
+ */
 function generateDefaultConfiguration(): IServiceConfig {
   const config: IServiceConfig = {
     cache: {
+      disabled: false,
       maxItems: 10000,
       recordLifetimeMs: 86400000, // 1 day
       cleanPeriodMs: 1800000, // 30 minutes

@@ -13,9 +13,16 @@ class ItemInfoService {
   private database: Database;
   private restServer: RESTServer;
   private cache: ItemInfoCache;
+  private debug = false;
 
-  public start(config: IServiceConfig): void {
+  public start(config: IServiceConfig, debug = false): void {
     this.configuration = _.cloneDeep(config);
+    this.debug = debug;
+
+    if (debug) {
+      console.log(`Using config: ${JSON.stringify(this.configuration)}`);
+    }
+
     this.database = new Database(this.configuration.database);
     this.redSkyClient = new RedSkyClient(this.configuration.redSky);
     this.cache = new ItemInfoCache(config.cache);
@@ -36,6 +43,13 @@ class ItemInfoService {
   }
 
   private async getRecordFromExternalSources(id: number): Promise<IProductRecord> {
+    // When in debug mode, collect time measurements of how long ops take
+    let startTime;
+    if (this.debug) {
+      startTime = process.hrtime.bigint();
+    }
+
+    // Retrieve information from the redsky API and the prices store.
     const redSkyData = await this.redSkyClient.getItemData(id);
     let priceData: Array<IPriceRecord> = await this.database.PricesStore.read('id', id);
 
@@ -58,6 +72,14 @@ class ItemInfoService {
       priceData = [ record ];
     }
 
+    // Give insight into what happened and how long it took
+    if (this.debug) {
+      const endTime = process.hrtime.bigint();
+      console.log(
+        `Retrieved item information from external sources in ${endTime - startTime} nanoseconds`
+      );
+    }
+
     // Compose the return data.
     return {
       id,
@@ -70,19 +92,35 @@ class ItemInfoService {
   }
 
   private async handleItemInfoRequest(id: number): Promise<IProductRecord> {
+    let startTime;
+    if (this.debug) {
+      startTime = process.hrtime.bigint();
+    }
+
+    // Retrieve cache data if possible
     let data: IProductRecord = this.cache.get(id);
+
+    let cacheEndTime;
+    if (this.debug) {
+      cacheEndTime = process.hrtime.bigint();
+    }
 
     // Data doesn't exist in the cache, so add it from the external sources
     if (!data) {
       data = await this.getRecordFromExternalSources(id);
       this.cache.write(data);
+    } else if (this.debug) {
+      // Figure out how long it took to get data from the cache.
+      console.log(
+        `Record retrieved from cache in ${cacheEndTime - startTime} nanoseconds`
+      );
     }
 
     return data;
   }
 
   private async handleItemPricePut(id: number, record: IProductRecord): Promise<any> {
-    const updated = await this.database.PricesStore.update({
+    await this.database.PricesStore.update({
       id,
       price: {
         value: record.current_price.value,
@@ -94,11 +132,7 @@ class ItemInfoService {
     // Write the change through to the cache.
     this.cache.write(record);
 
-    if (updated > 0) {
-      return record;
-    } else {
-      throw new Error('No such item!');
-    }
+    return record;
   }
 }
 

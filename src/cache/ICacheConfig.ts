@@ -1,4 +1,5 @@
 export interface ICacheConfig {
+  disabled: boolean;
   maxItems: number;
   recordLifetimeMs: number;
   cleanPeriodMs: number;

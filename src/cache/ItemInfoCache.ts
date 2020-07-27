@@ -32,19 +32,23 @@ export default class ItemInfoCache {
   private cleanTimer: any;
   private itemSyncCallback: Function;
   private purgeScheduled = false;
+  private disabled = false;
 
   public constructor(config: ICacheConfig) {
+    this.disabled = config.disabled;
     const cleanTimeout = config.cleanPeriodMs < CLEAN_MIN_VALUE ? CLEAN_MIN_VALUE : config.cleanPeriodMs;
     const syncTimeout = config.syncPeriodMs < SYNC_MIN_VALUE ? SYNC_MIN_VALUE : config.syncPeriodMs;
     this.maxSize = config.maxItems;
     this.maxLifetime = config.recordLifetimeMs;
     this.itemSyncCallback = config.itemSyncCallback;
 
-    // Set up interval timers for internal sync anc clean functions
-    if (typeof this.itemSyncCallback === 'function') {
-      this.syncTimer = setInterval(this.sync.bind(this), syncTimeout);
+    if (!this.disabled) {
+      // Set up interval timers for internal sync anc clean functions
+      if (typeof this.itemSyncCallback === 'function') {
+        this.syncTimer = setInterval(this.sync.bind(this), syncTimeout);
+      }
+      this.cleanTimer = setInterval(this.clean.bind(this), cleanTimeout);
     }
-    this.cleanTimer = setInterval(this.clean.bind(this), cleanTimeout);
   }
 
   public destroy(): void {
@@ -59,6 +63,10 @@ export default class ItemInfoCache {
    * @param record - The product record to add or update in the cache.
    */
   public write(record: IProductRecord): void {
+    if (this.disabled) {
+      return;
+    }
+
     const time = Date.now();
     const currentRec = this.records.get(record.id);
 
@@ -91,6 +99,10 @@ export default class ItemInfoCache {
    * @param id - The ID of the record to retrieve
    */
   public get(id: number): IProductRecord {
+    if (this.disabled) {
+      return null;
+    }
+
     const record = this.records.get(id);
 
     if (record) {
