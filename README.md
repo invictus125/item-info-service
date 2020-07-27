@@ -3,6 +3,20 @@ Gets an item name and price based on an ID, and allows price updates.
 
 # Installing and Running
 
+Running from a packaged executable:
+
+For convenience, executables have been provided in the dist directory of the repository for Windows, MacOS and Linux.  These executables have been built from the latest version of the code on the master branch. To start the service from one, pick the executable appropriate for your OS and execute it using a terminal session.
+
+Example:
+
+`./item-info-service-macos --debug -c ./myConf.json`
+
+Please see below for a list of command line options.
+
+---
+
+Running in a dev environment:
+
 The following steps presume that the user already has git, node >= 12.13.0, and NPM installed.
 
 * To install and run in a dev environment:
@@ -15,7 +29,9 @@ The following steps presume that the user already has git, node >= 12.13.0, and 
 
   To run in debug mode, `npm run start:debug`.
 
-* There are several command line flags available to change the behavior of the program:
+# Command Line Options
+
+There are several command line flags available to change the behavior of the program:
   - -h,-H,--help,help : Prints the command line usage information
   - -c,-C,--config : Allows specification of a configuration file. This file must be in JSON format.
   - -d,-D,--debug : Puts the service in debug mode. Informational messages will be put into stdout, along with performance statistics in some cases.
