@@ -29,12 +29,12 @@ The default configuration for the service is as follows:
   "cache": {
     "disabled": false,
     "maxItems": 10000,
-    "recordLifetimeMs": 86400000, // 1 day
-    "cleanPeriodMs": 1800000, // 30 minutes
-    "syncPeriodMs": 21600000 // 6 hours
+    "recordLifetimeMs": 86400000,
+    "cleanPeriodMs": 1800000,
+    "syncPeriodMs": 21600000
   },
   "database": {
-    "path": DEFAULT_DATABASE_PATH, // Depends on host system
+    "path": DEFAULT_DATABASE_PATH,
     "prices": {
       "dataFile": "prices.nosql"
     }
@@ -56,7 +56,9 @@ Important values to keep in mind:
 * `cache.syncPeriodMs`
   - Defines how often items in the cache are refreshed from the external data sources. This becomes important if for some reason it's anticipated that product names and/or prices are going to be changing a lot external to the service.
 * `database.path`
-  - Defines where the database will store its data files.
+  - Defines where the database will store its data files. The default value depends on the host OS:
+    - Windows: C:\\Users\\Public\\ProgramData\\myRetail
+    - Darwin/MacOS: /Users/shared/myRetail
 * `restServer.port`
   - Controls which port the service runs on.
 
