@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "test": "test:all",
+    "test": "./node_modules/.bin/jest",
     "build": "rm -rf build && ./node_modules/.bin/tsc",
     "lint": "eslint . --ext .ts"
   },

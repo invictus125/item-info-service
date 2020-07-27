@@ -121,8 +121,21 @@ export default class ItemInfoCache {
     return null;
   }
 
+  /**
+   * Goes through the cache record by record and uses the item sync callback
+   * to get updated data for each one.
+   * This is slow and should not be done often, and possibly not at all.
+   */
   private async sync(): Promise<any> {
-    return Promise.resolve();
+    const ids = this.records.keys();
+    let id = ids.next();
+    while (id) {
+      const currentRecord = this.records.get(id.value);
+      const updatedData = this.itemSyncCallback(id.value);
+      currentRecord.data = updatedData;
+      this.records.set(id.value, currentRecord);
+      id = ids.next();
+    }
   }
 
   /**
@@ -156,7 +169,7 @@ export default class ItemInfoCache {
     const position = this.timeArray.findIndex(
       (value: ITimeArrayRecord): boolean => { return value.id === record.data.id; }
     );
-    if (position) {
+    if (position > -1) {
       this.timeArray.splice(position, 1);
     }
   }

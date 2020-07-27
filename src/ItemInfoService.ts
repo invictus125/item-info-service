@@ -4,6 +4,7 @@ import Database from './database/Database';
 import RESTServer from './rest/RESTServer';
 import { IProductRecord } from './IProductRecord';
 import { IPriceRecord } from './database/IPriceRecord';
+import ItemInfoCache from './cache/ItemInfoCache';
 import _ from 'lodash';
 
 class ItemInfoService {
@@ -11,11 +12,13 @@ class ItemInfoService {
   private redSkyClient: RedSkyClient;
   private database: Database;
   private restServer: RESTServer;
+  private cache: ItemInfoCache;
 
   public start(config: IServiceConfig): void {
     this.configuration = _.cloneDeep(config);
     this.database = new Database(this.configuration.database);
     this.redSkyClient = new RedSkyClient(this.configuration.redSky);
+    this.cache = new ItemInfoCache(config.cache);
 
     // Set up paths for the rest server.
     if (this.configuration.restServer.paths === undefined) {
@@ -32,7 +35,7 @@ class ItemInfoService {
     this.restServer.start(this.configuration.restServer);
   }
 
-  private async handleItemInfoRequest(id: number): Promise<IProductRecord> {
+  private async getRecordFromExternalSources(id: number): Promise<IProductRecord> {
     const redSkyData = await this.redSkyClient.getItemData(id);
     let priceData: Array<IPriceRecord> = await this.database.PricesStore.read('id', id);
 
@@ -66,6 +69,18 @@ class ItemInfoService {
     };
   }
 
+  private async handleItemInfoRequest(id: number): Promise<IProductRecord> {
+    let data: IProductRecord = this.cache.get(id);
+
+    // Data doesn't exist in the cache, so add it from the external sources
+    if (!data) {
+      data = await this.getRecordFromExternalSources(id);
+      this.cache.write(data);
+    }
+
+    return data;
+  }
+
   private async handleItemPricePut(id: number, record: IProductRecord): Promise<any> {
     const updated = await this.database.PricesStore.update({
       id,
@@ -75,6 +90,15 @@ class ItemInfoService {
       },
       metaData: { updated: 'PUT' }
     });
+
+    // Write the change through to the cache.
+    this.cache.write(record);
+
+    if (updated > 0) {
+      return record;
+    } else {
+      throw new Error('No such item!');
+    }
   }
 }
 
