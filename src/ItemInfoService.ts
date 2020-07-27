@@ -2,6 +2,8 @@ import { IServiceConfig } from './IServiceConfig';
 import RedSkyClient from './client/RedSkyClient';
 import Database from './database/Database';
 import RESTServer from './rest/RESTServer';
+import { IProductRecord } from './IProductRecord';
+import { IPriceRecord } from './database/IPriceRecord';
 import _ from 'lodash';
 
 class ItemInfoService {
@@ -14,13 +16,13 @@ class ItemInfoService {
     this.configuration = _.cloneDeep(config);
     this.database = new Database(this.configuration.database);
     this.redSkyClient = new RedSkyClient(this.configuration.redSky);
-    
+
     // Set up paths for the rest server.
     if (this.configuration.restServer.paths === undefined) {
       this.configuration.restServer.paths = [];
     }
     this.configuration.restServer.paths.push({
-      path: '/product/{id}',
+      path: '/products/:id',
       getCallback: this.handleItemInfoRequest.bind(this),
       putCallback: this.handleItemPricePut.bind(this)
     });
@@ -30,14 +32,49 @@ class ItemInfoService {
     this.restServer.start(this.configuration.restServer);
   }
 
-  private handleItemInfoRequest(): void {
-    // TODO: Process the information request
-    throw new Error('not implemented!');
+  private async handleItemInfoRequest(id: number): Promise<IProductRecord> {
+    const redSkyData = await this.redSkyClient.getItemData(id);
+    let priceData: Array<IPriceRecord> = await this.database.PricesStore.read('id', id);
+
+    // Handle the case where there's no price data in our store yet.
+    // This block of code is not necessary if we start with a fully-populated
+    // database, but this was the only way to do it when not given price data
+    // to begin with.
+    if (!priceData || priceData.length === 0) {
+      const record: IPriceRecord = {
+        id,
+        price: {
+          value: redSkyData.price,
+          currency: 'USD'
+        },
+        metaData: {
+          added: 'auto added w/ redsky price'
+        }
+      };
+      this.database.PricesStore.create(record);
+      priceData = [ record ];
+    }
+
+    // Compose the return data.
+    return {
+      id,
+      name: redSkyData.name,
+      current_price: {
+        value: priceData[0].price.value,
+        currency_code: priceData[0].price.currency
+      }
+    };
   }
 
-  private handleItemPricePut(): void {
-    // TODO: Process the price change
-    throw new Error('not implemented!');
+  private async handleItemPricePut(id: number, record: IProductRecord): Promise<any> {
+    const updated = await this.database.PricesStore.update({
+      id,
+      price: {
+        value: record.current_price.value,
+        currency: record.current_price.currency_code
+      },
+      metaData: { updated: 'PUT' }
+    });
   }
 }
 

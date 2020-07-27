@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 describe('PricesStore', (): void => {
   const dbFile = path.resolve(process.cwd(), 'tests','database','testDB.nosql');
-  let pStore: PricesStore = new PricesStore(dbFile);
+  const pStore: PricesStore = new PricesStore(dbFile);
 
   const firstRecord: IPriceRecord = {
     id: 1234,
@@ -15,7 +15,9 @@ describe('PricesStore', (): void => {
   };
 
   afterAll((): void => {
-    fs.truncate(dbFile, 0, () => {});
+    fs.truncate(dbFile, 0, () => {
+      // Not empty
+    });
   });
 
   describe('create', (): void => {

@@ -7,7 +7,7 @@ import * as HTTP from 'http';
 export default class SecureWebRequestClient {
   private baseUrl: string;
 
-  constructor(baseUrl: string) {
+  public constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
 
     if (this.baseUrl[this.baseUrl.length-1] === '/') {
@@ -33,7 +33,7 @@ export default class SecureWebRequestClient {
   public getResponse(path: string[], options?: object): Promise<string> {
     return new Promise((resolve): void => {
       HTTPS.get(this.buildRequestPath(path, options), (res: HTTP.IncomingMessage): void => {
-        let responseData: string = '';
+        let responseData = '';
         res.on('data', (d: any): void => {
           responseData += d;
         });
@@ -62,11 +62,11 @@ export default class SecureWebRequestClient {
         reqPath += '?';
         for (const key of optionKeys) {
           // @ts-ignore
-          reqPath += `${key}=${options[key]}`
+          reqPath += `${key}=${options[key]}`;
         }
       }
     }
 
     return reqPath;
   }
-};
+}

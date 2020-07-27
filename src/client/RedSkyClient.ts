@@ -6,7 +6,7 @@ export default class RedSkyClient {
   private client: SecureWebRequestClient;
   private apiVersion: string;
 
-  constructor(config: IRedSkyConfig) {
+  public constructor(config: IRedSkyConfig) {
     this.apiVersion = config.apiVersion;
     this.client = new SecureWebRequestClient('https://redsky.target.com');
   }
@@ -24,4 +24,4 @@ export default class RedSkyClient {
     };
     return data;
   }
-};
+}
