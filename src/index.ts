@@ -32,7 +32,7 @@ for (let i = 0; i < args.length; i++) {
       console.log('Config file path must be provided to use the -c/-C/--config option!');
       process.exit(0);
     }
-  } else if (arg.match(/-c|--debug/i)) {
+  } else if (arg.match(/-d|--debug/i)) {
     debug = true;
   }
 }

@@ -143,7 +143,7 @@ export default class ItemInfoCache {
     let id = ids.next();
     while (id) {
       const currentRecord = this.records.get(id.value);
-      const updatedData = this.itemSyncCallback(id.value);
+      const updatedData = await this.itemSyncCallback(id.value);
       currentRecord.data = updatedData;
       this.records.set(id.value, currentRecord);
       id = ids.next();

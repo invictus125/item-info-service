@@ -15,6 +15,11 @@ class ItemInfoService {
   private cache: ItemInfoCache;
   private debug = false;
 
+  /**
+   * Starts the service and all associated subsystems.
+   * @param config - A configuration to use during this run of the system
+   * @param debug - True if debug console output is desired, else false
+   */
   public start(config: IServiceConfig, debug = false): void {
     this.configuration = _.cloneDeep(config);
     this.debug = debug;
@@ -25,7 +30,10 @@ class ItemInfoService {
 
     this.database = new Database(this.configuration.database);
     this.redSkyClient = new RedSkyClient(this.configuration.redSky);
-    this.cache = new ItemInfoCache(config.cache);
+
+    // Set up callback for syncing items in the cache, and then create the cache.
+    this.configuration.cache.itemSyncCallback = this.getRecordFromExternalSources.bind(this);
+    this.cache = new ItemInfoCache(this.configuration.cache);
 
     // Set up paths for the rest server.
     if (this.configuration.restServer.paths === undefined) {
@@ -42,6 +50,10 @@ class ItemInfoService {
     this.restServer.start(this.configuration.restServer);
   }
 
+  /**
+   * Retrieves product information from RedSky and the prices store, and returns it in the form of a product record.
+   * @param id - The product ID to get info for
+   */
   private async getRecordFromExternalSources(id: number): Promise<IProductRecord> {
     // When in debug mode, collect time measurements of how long ops take
     let startTime;
@@ -91,6 +103,11 @@ class ItemInfoService {
     };
   }
 
+  /**
+   * Retrieves information from the cache if possible, and returns it.
+   * If the desired information is not in the cache, retrieves it from RedSky and the prices store.
+   * @param id - The product ID retrieve information for
+   */
   private async handleItemInfoRequest(id: number): Promise<IProductRecord> {
     let startTime;
     if (this.debug) {
@@ -119,6 +136,11 @@ class ItemInfoService {
     return data;
   }
 
+  /**
+   * Handles a PUT request containing new price information for an item, writing the new value to both the cache and the prices store.
+   * @param id - The ID of the record for which to change the price
+   * @param record - The product record from the body of the PUT request
+   */
   private async handleItemPricePut(id: number, record: IProductRecord): Promise<any> {
     await this.database.PricesStore.update({
       id,
