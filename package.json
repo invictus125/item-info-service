@@ -2,12 +2,15 @@
   "name": "item-info-service",
   "version": "1.0.0",
   "description": "Exposes a REST service which gets information about an item, including name and pricing information, based on an item ID. Also allows pricing updates.",
-  "main": "dist/index.js",
+  "main": "build/item-info-service.js",
   "type": "module",
   "scripts": {
-    "test": "test:all",
+    "test": "./node_modules/.bin/jest",
     "build": "rm -rf build && ./node_modules/.bin/tsc",
-    "lint": "eslint . --ext .ts"
+    "package": "rm -rf dist/* && ./node_modules/.bin/pkg --out-path ./dist ./build/item-info-service.js",
+    "lint": "eslint . --ext .ts",
+    "start": "node ./build/item-info-service.js",
+    "start:debug": "node ./build/index.js --debug"
   },
   "repository": {
     "type": "git",
@@ -43,6 +46,7 @@
     "@typescript-eslint/parser": "^3.7.0",
     "eslint": "^7.5.0",
     "jest": "^26.1.0",
+    "pkg": "^4.4.9",
     "typescript": "^3.9.7"
   }
 }

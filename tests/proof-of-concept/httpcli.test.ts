@@ -1,4 +1,4 @@
-import Client from '../src/client/SecureWebRequestClient';
+import Client from '../../src/client/SecureWebRequestClient';
 
 const myCli = new Client('https://redsky.target.com');
 
