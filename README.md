@@ -1,7 +1,7 @@
 # item-info-service
 Gets an item name and price based on an ID, and allows price updates.
 
-# Installing and Running
+# Installing, Running, and Testing
 
 Running from a packaged executable:
 
@@ -28,6 +28,12 @@ The following steps presume that the user already has git, node >= 12.13.0, and 
   The above will result in the service running on http://localhost:80.
 
   To run in debug mode, `npm run start:debug`.
+
+---
+
+Testing in a dev environment:
+
+There are unit tests for some of the more complicated functionality in the program, including some which could be considered "end-to-end", using the entire system from within the test framework.  All the unit tests and coverage can be run in the development environment (set up instructions in the previous section) by running `npm run test`.
 
 # Command Line Options
 
