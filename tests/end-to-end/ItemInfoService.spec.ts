@@ -66,10 +66,7 @@ describe('ItemInfoService', (): void => {
       ).then((): void => {
         // @ts-ignore
         const cache = ItemInfoService.cache;
-        const val = cache.get(testData.id);
-        // @ts-ignore
-        console.log('CACHE ENTRY: ', cache.records.get(`${testData.id}`));
-        const price = val.current_price.value;
+        const price = cache.get(testData.id).current_price.value;
         expect(price).toEqual(testData.current_price.value);
         done();
       });
