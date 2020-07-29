@@ -10,7 +10,7 @@
     "package": "rm -rf dist/* && ./node_modules/.bin/pkg --out-path ./dist ./build/item-info-service.js",
     "lint": "eslint . --ext .ts",
     "start": "node ./build/item-info-service.js",
-    "start:debug": "node ./build/index.js --debug"
+    "start:debug": "node ./build/item-info-service.js --debug"
   },
   "repository": {
     "type": "git",

@@ -125,6 +125,11 @@ class ItemInfoService {
     // Data doesn't exist in the cache, so add it from the external sources
     if (!data) {
       data = await this.getRecordFromExternalSources(id);
+
+      if (this.debug) {
+        console.log(`Writing to cache: ${JSON.stringify(data)}`);
+      }
+
       this.cache.write(data);
     } else if (this.debug) {
       // Figure out how long it took to get data from the cache.

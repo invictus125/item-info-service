@@ -3,6 +3,7 @@ import { waitMs } from '../../src/util';
 
 describe('ItemInfoCache', (): void => {
   const cache: any = new ItemInfoCache({
+    disabled: false,
     maxItems: 10,
     recordLifetimeMs: 60000,
     cleanPeriodMs: 5000,

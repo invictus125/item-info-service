@@ -51,7 +51,8 @@ export default class RESTServer {
 
   private async handleGet(dataCb: Function, request: express.Request, response: express.Response): Promise<any> {
     try {
-      const data = await dataCb(request.params.id);
+      // Ensure ID is an integer, not a string
+      const data = await dataCb(parseInt(request.params.id));
       response.send(data);
     } catch(e) {
       response.status(404).end();
@@ -60,7 +61,8 @@ export default class RESTServer {
 
   private async handlePut(dataCb: Function, request: express.Request, response: express.Response): Promise<any> {
     try {
-      const data = await dataCb(request.params.id, request.body);
+      // Ensure ID is an integer, not a string.
+      const data = await dataCb(parseInt(request.params.id), request.body);
       response.send(data);
     } catch(e) {
       response.status(500).end();
