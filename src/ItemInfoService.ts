@@ -152,7 +152,11 @@ class ItemInfoService {
     });
 
     // Write the change through to the cache.
-    this.cache.write(record);
+    const cacheRec = this.cache.get(id);
+    if (cacheRec) {
+      cacheRec.current_price = record.current_price;
+      this.cache.write(cacheRec);
+    }
 
     return record;
   }

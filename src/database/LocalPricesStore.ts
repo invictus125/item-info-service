@@ -41,7 +41,7 @@ export default class LocalPricesStore implements PricesStore {
 
   public update(record: IPriceRecord): Promise<number> {
     return new Promise((resolve, reject): void => {
-      this.db.update(record, true).make((builder: any) => {
+      this.db.update(record, record).make((builder: any) => {
         // builder.first(); --> updates only the one document
         builder.where('id', record.id);
         builder.callback((err: Error, count: number): void => {
