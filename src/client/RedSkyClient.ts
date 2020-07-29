@@ -2,6 +2,9 @@ import SecureWebRequestClient from './SecureWebRequestClient';
 import { IRedSkyResponse, IRedSkyData } from './IRedSkyData';
 import { IRedSkyConfig } from './IRedSkyConfig';
 
+/**
+ * A class to get data from the RedSky API and convert it to a usable object.
+ */
 export default class RedSkyClient {
   private client: SecureWebRequestClient;
   private apiVersion: string;

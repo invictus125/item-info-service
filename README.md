@@ -5,7 +5,7 @@ Gets an item name and price based on an ID, and allows price updates.
 
 Running from a packaged executable:
 
-For convenience, executables have been provided in the dist directory of the repository for Windows, MacOS and Linux.  These executables have been built from the latest version of the code on the master branch. To start the service from one, pick the executable appropriate for your OS and execute it using a terminal session.
+For convenience, executables have been provided in the `dist` directory of the repository for Windows, MacOS and Linux.  These executables have been built from the latest version of the code on the master branch. To start the service from one, pick the executable appropriate for your OS and execute it using a terminal session.
 
 Example:
 
