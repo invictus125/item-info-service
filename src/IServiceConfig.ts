@@ -5,7 +5,7 @@ import { ICacheConfig } from './cache/ICacheConfig';
 
 const DEFAULT_DATABASE_PATH =
   process.platform === 'darwin' ? '/Users/shared/myRetail' :
-    process.platform === 'win32' ? 'C:\\Users\\Public\\ProgramData\\myRetail' :
+    process.platform === 'win32' ? 'C:\\ProgramData\\myRetail' :
       '/home/myRetail';
 
 export interface IServiceConfig {

@@ -73,7 +73,7 @@ Important values to keep in mind:
   - Defines how often items in the cache are refreshed from the external data sources. This becomes important if for some reason it's anticipated that product names and/or prices are going to be changing a lot external to the service.
 * `database.path`
   - Defines where the database will store its data files. The default value depends on the host OS:
-    - Windows: C:\\Users\\Public\\ProgramData\\myRetail
+    - Windows: C:\\ProgramData\\myRetail
     - Darwin/MacOS: /Users/shared/myRetail
 * `restServer.port`
   - Controls which port the service runs on.
