@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/invictus125/item-info-service#readme",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "lodash": "^4.17.19",
     "nosql": "^6.1.0"
   },
